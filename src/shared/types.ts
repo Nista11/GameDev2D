@@ -1,18 +1,93 @@
-import { Physics, Types } from "phaser";
+import { Physics, Scene, Types } from "phaser";
 import { Assets } from "./constants";
+import { MainGame } from "../scenes/MainGame";
 
-export class Player {
+export abstract class AbstractPlayer {
     public startX: number;
     public startY: number;
     public asset: Assets;
     public sprite: Types.Physics.Arcade.SpriteWithDynamicBody;
+
+    public abstract isUpPressed(context: MainGame): boolean;
+    public abstract isRightPressed(context: MainGame): boolean;
+    public abstract isDownPressed(context: MainGame): boolean;
+    public abstract isLeftPressed(context: MainGame): boolean;
+
+    public update(context: MainGame): void {
+        const speed = 200;
+
+        if (this.isLeftPressed(context))
+        {
+            this.sprite.setVelocityX(-speed);
+
+            this.sprite.anims.play('left', true);
+        }
+        else if (this.isRightPressed(context))
+        {
+            this.sprite.setVelocityX(speed);
+
+            this.sprite.play('right', true);
+        }
+        else
+        {
+            this.sprite.setVelocityX(0);
+
+            this.sprite.anims.play('turn');
+        }
+
+        if (this.isUpPressed(context) && this.sprite.body.touching.down)
+        {
+            this.sprite.setVelocityY(-speed * 2);
+        }
+    }
+}
+
+export class ArrowKeysPlayer extends AbstractPlayer {
+    public isUpPressed(context: MainGame): boolean {
+        return context.cursors.up.isDown;
+    }
+
+    public isRightPressed(context: MainGame): boolean {
+        return context.cursors.right.isDown;
+    }
+
+    public isDownPressed(context: MainGame): boolean {
+        return context.cursors.down.isDown;
+    }
+
+    public isLeftPressed(context: MainGame): boolean {
+        return context.cursors.left.isDown;
+    }
+}
+
+export class WasdKeysPlayer extends AbstractPlayer {
+    public isUpPressed(context: MainGame): boolean {
+        return context.cursors.up.isDown;
+    }
+
+    public isRightPressed(context: MainGame): boolean {
+        return context.cursors.right.isDown;
+    }
+
+    public isDownPressed(context: MainGame): boolean {
+        return context.cursors.down.isDown;
+    }
+
+    public isLeftPressed(context: MainGame): boolean {
+        return context.cursors.left.isDown;
+    }
 }
 
 export class PlayerBuilder {
-    private playerInstance: Player;
+    private playerInstance: AbstractPlayer;
 
-    public constructor() {
-        this.playerInstance = new Player();
+    public constructor(arrowKeys: boolean) {
+        if (arrowKeys) {
+            this.playerInstance = new ArrowKeysPlayer();
+        }
+        else {
+            this.playerInstance = new WasdKeysPlayer();
+        }
         return this;
     }
 
@@ -36,10 +111,12 @@ export class PlayerBuilder {
             this.playerInstance.startX, 
             this.playerInstance.startY, 
             this.playerInstance.asset.toString());
+        this.playerInstance.sprite.setBounce(0);
+        this.playerInstance.sprite.setCollideWorldBounds(true);
         return this;
     }
 
-    public build(): Player {
+    public build(): AbstractPlayer {
         return this.playerInstance;
     }
 }

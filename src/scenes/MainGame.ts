@@ -1,6 +1,6 @@
 import { Scene, GameObjects, Physics, Types } from 'phaser';
 import { Assets, Dimensions, GameObjectsEnum } from '../shared/constants';
-import { Player, PlayerBuilder } from '../shared/types';
+import { AbstractPlayer, PlayerBuilder } from '../shared/types';
 
 export class MainGame extends Scene
 {
@@ -8,8 +8,8 @@ export class MainGame extends Scene
     logo: GameObjects.Image;
     title: GameObjects.Text;
     platforms: Physics.Arcade.StaticGroup;
-    firstPlayer: Player;
-    secondPlayer: Player;
+    firstPlayer: AbstractPlayer;
+    secondPlayer: AbstractPlayer;
    // player: Types.Physics.Arcade.SpriteWithDynamicBody;
     ball: Types.Physics.Arcade.SpriteWithDynamicBody;
     cursors: Types.Input.Keyboard.CursorKeys;
@@ -29,15 +29,12 @@ export class MainGame extends Scene
         this.platforms = this.physics.add.staticGroup();
         this.platforms.create(400, 568, GameObjectsEnum.GROUND).setScale(2).refreshBody();
 
-        this.firstPlayer = new PlayerBuilder()
+        this.firstPlayer = new PlayerBuilder(true)
             .startX(100)
             .startY(450)
             .asset(Assets.PLAYER)
             .withPhysics(this.physics)
             .build();
-
-        this.firstPlayer.sprite.setBounce(0);
-        this.firstPlayer.sprite.setCollideWorldBounds(true);
 
         this.physics.add.collider(this.firstPlayer.sprite, this.platforms);
 
@@ -78,31 +75,7 @@ export class MainGame extends Scene
     }
 
     update(time: number, delta: number): void {
-        const speed = 200;
-
-        if (this.cursors.left.isDown)
-        {
-            this.firstPlayer.sprite.setVelocityX(-speed);
-
-            this.firstPlayer.sprite.anims.play('left', true);
-        }
-        else if (this.cursors.right.isDown)
-        {
-            this.firstPlayer.sprite.setVelocityX(speed);
-
-            this.firstPlayer.sprite.play('right', true);
-        }
-        else
-        {
-            this.firstPlayer.sprite.setVelocityX(0);
-
-            this.firstPlayer.sprite.anims.play('turn');
-        }
-
-        if (this.cursors.up.isDown && this.firstPlayer.sprite.body.touching.down)
-        {
-            this.firstPlayer.sprite.setVelocityY(-speed * 2);
-        }
+        this.firstPlayer.update(this);
     }
 
     hitBall (player: typeof this.firstPlayer.sprite, ball: any)
