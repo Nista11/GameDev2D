@@ -62,19 +62,19 @@ export class ArrowKeysPlayer extends AbstractPlayer {
 
 export class WasdKeysPlayer extends AbstractPlayer {
     public isUpPressed(context: MainGame): boolean {
-        return context.cursors.up.isDown;
+        return context.keyW ? context.keyW.isDown : false;
     }
 
     public isRightPressed(context: MainGame): boolean {
-        return context.cursors.right.isDown;
+        return context.keyD ? context.keyD.isDown : false;
     }
 
     public isDownPressed(context: MainGame): boolean {
-        return context.cursors.down.isDown;
+        return context.keyS ? context.keyS.isDown : false;
     }
 
     public isLeftPressed(context: MainGame): boolean {
-        return context.cursors.left.isDown;
+        return context.keyA ? context.keyA.isDown : false;
     }
 }
 

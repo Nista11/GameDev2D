@@ -10,12 +10,15 @@ export class MainGame extends Scene
     platforms: Physics.Arcade.StaticGroup;
     firstPlayer: AbstractPlayer;
     secondPlayer: AbstractPlayer;
-   // player: Types.Physics.Arcade.SpriteWithDynamicBody;
     ball: Types.Physics.Arcade.SpriteWithDynamicBody;
     cursors: Types.Input.Keyboard.CursorKeys;
     score: number;
     scoreText: GameObjects.Text;
     gameOver: boolean;
+    keyW: Phaser.Input.Keyboard.Key | undefined;
+    keyA: Phaser.Input.Keyboard.Key | undefined;
+    keyS: Phaser.Input.Keyboard.Key | undefined;
+    keyD: Phaser.Input.Keyboard.Key | undefined;
 
     constructor ()
     {
@@ -25,18 +28,30 @@ export class MainGame extends Scene
     create ()
     {
         this.background = this.add.image(Dimensions.WIDTH / 2, Dimensions.HEIGHT / 2, Assets.SKY);
+        this.keyW = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.keyA = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyS = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.keyD = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
         this.platforms = this.physics.add.staticGroup();
         this.platforms.create(400, 568, GameObjectsEnum.GROUND).setScale(2).refreshBody();
 
-        this.firstPlayer = new PlayerBuilder(true)
+        this.firstPlayer = new PlayerBuilder(false)
             .startX(100)
             .startY(450)
             .asset(Assets.PLAYER)
             .withPhysics(this.physics)
             .build();
 
+        this.secondPlayer = new PlayerBuilder(true)
+            .startX(700)
+            .startY(450)
+            .asset(Assets.PLAYER)
+            .withPhysics(this.physics)
+            .build();
+
         this.physics.add.collider(this.firstPlayer.sprite, this.platforms);
+        this.physics.add.collider(this.secondPlayer.sprite, this.platforms);
 
         this.ball = this.physics.add.sprite(100, 16, Assets.BALL);
         this.ball.setBounce(0.9);
@@ -46,6 +61,7 @@ export class MainGame extends Scene
         this.physics.add.collider(this.ball, this.platforms);
 
         this.physics.add.collider(this.firstPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
+        this.physics.add.collider(this.secondPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
 
         this.anims.create({
             key: 'left',
@@ -76,6 +92,7 @@ export class MainGame extends Scene
 
     update(time: number, delta: number): void {
         this.firstPlayer.update(this);
+        this.secondPlayer.update(this);
     }
 
     hitBall (player: typeof this.firstPlayer.sprite, ball: any)
