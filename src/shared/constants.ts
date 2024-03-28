@@ -3,11 +3,13 @@ export const enum Assets {
     GROUND = 'ground',
     BALL = 'ball',
     PINK_PLAYER = 'pink_player',
-    BLUE_PLAYER = 'blue_player'
+    BLUE_PLAYER = 'blue_player',
+    NET = 'net'
 };
 
 export const enum GameObjectsEnum {
     GROUND = 'ground',
+    NET = 'net'
 };
 
 export const enum Dimensions {

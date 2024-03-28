@@ -34,6 +34,8 @@ export class Preloader extends Scene
         this.load.setPath('assets');
 
         this.load.image(Assets.GROUND, 'platform.png');
+        
+        this.load.image(Assets.NET, 'net.png');
 
         this.load.spritesheet(Assets.BALL, 'ball.png', {
             frameWidth: 49,

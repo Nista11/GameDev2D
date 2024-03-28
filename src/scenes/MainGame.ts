@@ -35,6 +35,7 @@ export class MainGame extends Scene
 
         this.platforms = this.physics.add.staticGroup();
         this.platforms.create(400, 568, GameObjectsEnum.GROUND).setScale(2).refreshBody();
+        this.platforms.create(400, 436, GameObjectsEnum.NET).setScale(.5).refreshBody();
 
         this.firstPlayer = new PlayerBuilder(false)
             .startX(100)
