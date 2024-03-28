@@ -13,6 +13,7 @@ export class MainGame extends Scene
     ball: Types.Physics.Arcade.SpriteWithDynamicBody;
     pinkLasers: Physics.Arcade.Group;
     blueLasers: Physics.Arcade.Group;
+    middleWall: Types.Physics.Arcade.SpriteWithStaticBody;
     cursors: Types.Input.Keyboard.CursorKeys;
     scoreText: GameObjects.Text;
     gameOver: boolean;
@@ -85,6 +86,14 @@ export class MainGame extends Scene
             this.secondPlayer.onLaserCollide as any, 
             undefined, 
             this.secondPlayer);
+
+        this.middleWall = this.physics.add.staticSprite(400, 170, Assets.NET).setScale(.5).refreshBody();
+        this.middleWall.scaleY = .85;
+        this.middleWall.setVisible(false);
+        this.middleWall.setImmovable(true);
+        this.middleWall.refreshBody();
+        this.physics.add.collider(this.firstPlayer.sprite, this.middleWall);
+        this.physics.add.collider(this.secondPlayer.sprite, this.middleWall);
 
         [Assets.PINK_PLAYER, Assets.BLUE_PLAYER].map(asset => {
             this.anims.create({

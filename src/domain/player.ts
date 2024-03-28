@@ -11,7 +11,7 @@ export abstract class AbstractPlayer {
     public lastLaserPress = 0;
     public lastLaserEffect = 0;
     public speed = 300;
-    public static laserEffectLimit = 2000;
+    public static laserEffectLimit = 2500;
     public static lastLaserLimit = 750;
 
     public abstract isUpPressed(context: MainGame): boolean;
