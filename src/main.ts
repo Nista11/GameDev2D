@@ -7,6 +7,24 @@ import { Dimensions } from './shared/constants';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
+
+class GameObject extends Game {
+    private static isInitialised: boolean = false;
+
+    private constructor(config: Types.Core.GameConfig) {
+        super(config);
+    }
+
+    public static create = (config: Types.Core.GameConfig): GameObject => {
+        if (!this.isInitialised) {
+            return new GameObject(config);
+        }
+        else {
+            throw new Error("Element can only be initialised once");
+        }
+    }
+}
+
 const config: Types.Core.GameConfig = {
     type: Phaser.AUTO,
     width: Dimensions.WIDTH,
@@ -31,4 +49,4 @@ const config: Types.Core.GameConfig = {
     ]
 };
 
-export default new Game(config);
+export default GameObject.create(config);
