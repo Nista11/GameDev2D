@@ -19,20 +19,17 @@ export abstract class AbstractPlayer {
         if (this.isLeftPressed(context))
         {
             this.sprite.setVelocityX(-speed);
-
-            this.sprite.anims.play('left', true);
+            this.sprite.anims.play(`${this.asset}_left`, true);
         }
         else if (this.isRightPressed(context))
         {
             this.sprite.setVelocityX(speed);
-
-            this.sprite.play('right', true);
+            this.sprite.play(`${this.asset}_right`, true);
         }
         else
         {
             this.sprite.setVelocityX(0);
-
-            this.sprite.anims.play('turn');
+            this.sprite.anims.play(`${this.asset}_turn`);
         }
 
         if (this.isUpPressed(context) && this.sprite.body.touching.down)

@@ -39,14 +39,14 @@ export class MainGame extends Scene
         this.firstPlayer = new PlayerBuilder(false)
             .startX(100)
             .startY(450)
-            .asset(Assets.PLAYER)
+            .asset(Assets.PINK_PLAYER)
             .withPhysics(this.physics)
             .build();
 
         this.secondPlayer = new PlayerBuilder(true)
             .startX(700)
             .startY(450)
-            .asset(Assets.PLAYER)
+            .asset(Assets.BLUE_PLAYER)
             .withPhysics(this.physics)
             .build();
 
@@ -63,24 +63,26 @@ export class MainGame extends Scene
         this.physics.add.collider(this.firstPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
         this.physics.add.collider(this.secondPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
 
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers(Assets.PLAYER, { start: 0, end: 3 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'turn',
-            frames: [ { key: Assets.PLAYER, frame: 4 } ],
-            frameRate: 20
-        });
-
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers(Assets.PLAYER, { start: 5, end: 8 }),
-            frameRate: 10,
-            repeat: -1
+        [Assets.PINK_PLAYER, Assets.BLUE_PLAYER].map(asset => {
+            this.anims.create({
+                key: `${asset}_left`,
+                frames: this.anims.generateFrameNumbers(asset, { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: -1
+            });
+    
+            this.anims.create({
+                key: `${asset}_turn`,
+                frames: [ { key: asset, frame: 4 } ],
+                frameRate: 20
+            });
+    
+            this.anims.create({
+                key: `${asset}_right`,
+                frames: this.anims.generateFrameNumbers(asset, { start: 5, end: 8 }),
+                frameRate: 10,
+                repeat: -1
+            });
         });
 
         this.cursors = this.input.keyboard?.createCursorKeys() as any;

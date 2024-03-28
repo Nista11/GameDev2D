@@ -2,7 +2,8 @@ export const enum Assets {
     SKY = 'sky',
     GROUND = 'ground',
     BALL = 'ball',
-    PLAYER = 'player'
+    PINK_PLAYER = 'pink_player',
+    BLUE_PLAYER = 'blue_player'
 };
 
 export const enum GameObjectsEnum {

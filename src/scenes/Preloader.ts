@@ -40,7 +40,12 @@ export class Preloader extends Scene
             frameHeight: 42
         });
 
-        this.load.spritesheet(Assets.PLAYER, 'dude.png', {
+        this.load.spritesheet(Assets.PINK_PLAYER, 'pink_player.png', {
+            frameWidth: 31.33,
+            frameHeight: 42
+        });
+
+        this.load.spritesheet(Assets.BLUE_PLAYER, 'blue_player.png', {
             frameWidth: 31.33,
             frameHeight: 42
         });
