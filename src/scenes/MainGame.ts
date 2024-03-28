@@ -20,7 +20,7 @@ export class MainGame extends Scene
     keyA: Phaser.Input.Keyboard.Key | undefined;
     keyS: Phaser.Input.Keyboard.Key | undefined;
     keyD: Phaser.Input.Keyboard.Key | undefined;
-    keyCtrl: Phaser.Input.Keyboard.Key | undefined;
+    keyC: Phaser.Input.Keyboard.Key | undefined;
 
     constructor ()
     {
@@ -34,7 +34,7 @@ export class MainGame extends Scene
         this.keyA = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyS = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyD = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.keyCtrl = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+        this.keyC = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 
         this.cursors = this.input.keyboard?.createCursorKeys() as any;
 

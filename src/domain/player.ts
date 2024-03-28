@@ -8,6 +8,8 @@ export abstract class AbstractPlayer {
     public asset: Assets;
     public sprite: Types.Physics.Arcade.SpriteWithDynamicBody;
     public score = 0;
+    public lastLaserPress = 0;
+    public static lastLaserLimit = 750;
 
     public abstract isUpPressed(context: MainGame): boolean;
     public abstract isRightPressed(context: MainGame): boolean;
@@ -33,8 +35,25 @@ export abstract class AbstractPlayer {
             this.sprite.setVelocityY(-speed * 1.7);
         }
 
-        if (this.isLaserKeyPressed(context)) {
-            
+        if (this.isLaserKeyPressed(context) && Date.now() - this.lastLaserPress > AbstractPlayer.lastLaserLimit) {
+            const laser = this.asset == Assets.PINK_PLAYER ?
+                context.pinkLasers.create(this.sprite.x - 150, this.sprite.y, Assets.PINK_LASER).setScale(.12).refreshBody() :
+                context.blueLasers.create(this.sprite.x - 200, this.sprite.y, Assets.BLUE_LASER).setScale(.12).refreshBody();
+            laser.setVelocityX(200 * (this.asset == Assets.PINK_PLAYER ? 1 : -1));
+            laser.setVelocityY(0);
+            laser.body.setAllowGravity(false);
+
+            laser.setCollideWorldBounds(true);
+            laser.body.onWorldBounds = true;
+
+            laser.body.world.on('worldbounds', (body: any) => {
+                if (body.gameObject === laser) {
+                    body.gameObject.setActive(false);
+                    body.gameObject.setVisible(false);
+                }
+              }, laser);
+
+            this.lastLaserPress = Date.now();
         }
     }
 }
@@ -57,7 +76,7 @@ export class ArrowKeysPlayer extends AbstractPlayer {
     }
 
     public isLaserKeyPressed(context: MainGame): boolean {
-        return context.keyCtrl? context.keyCtrl.isDown : false;
+        return context.cursors.shift? context.cursors.shift.isDown : false;
     }
 }
 
@@ -79,7 +98,7 @@ export class WasdKeysPlayer extends AbstractPlayer {
     }
 
     public isLaserKeyPressed(context: MainGame): boolean {
-        return context.cursors.space? context.cursors.space.isDown : false;
+        return context.keyC ? context.keyC.isDown : false;
     }
 }
 
