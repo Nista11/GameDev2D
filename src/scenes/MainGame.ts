@@ -1,6 +1,6 @@
 import { Scene, GameObjects, Physics, Types } from 'phaser';
 import { Assets, Dimensions, GameObjectsEnum } from '../shared/constants';
-import { AbstractPlayer, PlayerBuilder } from '../shared/types';
+import { AbstractPlayer, PlayerBuilder } from '../domain/player';
 
 export class MainGame extends Scene
 {
@@ -11,14 +11,16 @@ export class MainGame extends Scene
     firstPlayer: AbstractPlayer;
     secondPlayer: AbstractPlayer;
     ball: Types.Physics.Arcade.SpriteWithDynamicBody;
+    pinkLasers: Physics.Arcade.Group;
+    blueLasers: Physics.Arcade.Group;
     cursors: Types.Input.Keyboard.CursorKeys;
-    score: number;
     scoreText: GameObjects.Text;
     gameOver: boolean;
     keyW: Phaser.Input.Keyboard.Key | undefined;
     keyA: Phaser.Input.Keyboard.Key | undefined;
     keyS: Phaser.Input.Keyboard.Key | undefined;
     keyD: Phaser.Input.Keyboard.Key | undefined;
+    keyCtrl: Phaser.Input.Keyboard.Key | undefined;
 
     constructor ()
     {
@@ -32,6 +34,9 @@ export class MainGame extends Scene
         this.keyA = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyS = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyD = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.keyCtrl = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+
+        this.cursors = this.input.keyboard?.createCursorKeys() as any;
 
         this.platforms = this.physics.add.staticGroup();
         this.platforms.create(400, 568, GameObjectsEnum.GROUND).setScale(2).refreshBody();
@@ -64,6 +69,9 @@ export class MainGame extends Scene
         this.physics.add.collider(this.firstPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
         this.physics.add.collider(this.secondPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
 
+        this.pinkLasers = this.physics.add.group();
+        this.blueLasers = this.physics.add.group();
+
         [Assets.PINK_PLAYER, Assets.BLUE_PLAYER].map(asset => {
             this.anims.create({
                 key: `${asset}_left`,
@@ -86,10 +94,11 @@ export class MainGame extends Scene
             });
         });
 
-        this.cursors = this.input.keyboard?.createCursorKeys() as any;
-
-        this.score = 0;
-        this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', color: '#000' });
+        this.scoreText = this.add.text(
+            330, 
+            35, 
+            `${this.firstPlayer.score} - ${this.secondPlayer.score}`,
+            { fontSize: '45px', color: '#000' });
         this.gameOver = false;
     }
 

@@ -4,7 +4,9 @@ export const enum Assets {
     BALL = 'ball',
     PINK_PLAYER = 'pink_player',
     BLUE_PLAYER = 'blue_player',
-    NET = 'net'
+    NET = 'net',
+    PINK_LASER = 'pink_laser',
+    BLUE_LASER = 'blue_laser'
 };
 
 export const enum GameObjectsEnum {

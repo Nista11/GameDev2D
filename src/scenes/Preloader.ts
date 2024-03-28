@@ -37,6 +37,10 @@ export class Preloader extends Scene
         
         this.load.image(Assets.NET, 'net.png');
 
+        this.load.image(Assets.PINK_LASER, 'pink_laser.png');
+        
+        this.load.image(Assets.BLUE_LASER, 'blue_laser.png');
+
         this.load.spritesheet(Assets.BALL, 'ball.png', {
             frameWidth: 49,
             frameHeight: 42
