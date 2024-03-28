@@ -9,6 +9,9 @@ export abstract class AbstractPlayer {
     public sprite: Types.Physics.Arcade.SpriteWithDynamicBody;
     public score = 0;
     public lastLaserPress = 0;
+    public lastLaserEffect = 0;
+    public speed = 300;
+    public static laserEffectLimit = 2000;
     public static lastLaserLimit = 750;
 
     public abstract isUpPressed(context: MainGame): boolean;
@@ -18,13 +21,11 @@ export abstract class AbstractPlayer {
     public abstract isLaserKeyPressed(context: MainGame): boolean;
 
     public update(context: MainGame): void {
-        const speed = 300;
-
         if (this.isLeftPressed(context)) {
-            this.sprite.setVelocityX(-speed);
+            this.sprite.setVelocityX(-this.speed);
             this.sprite.anims.play(`${this.asset}_left`, true);
         } else if (this.isRightPressed(context)) {
-            this.sprite.setVelocityX(speed);
+            this.sprite.setVelocityX(this.speed);
             this.sprite.play(`${this.asset}_right`, true);
         } else {
             this.sprite.setVelocityX(0);
@@ -32,7 +33,7 @@ export abstract class AbstractPlayer {
         }
 
         if (this.isUpPressed(context) && this.sprite.body.touching.down) {
-            this.sprite.setVelocityY(-speed * 1.7);
+            this.sprite.setVelocityY(-this.speed * 1.7);
         }
 
         if (this.isLaserKeyPressed(context) && Date.now() - this.lastLaserPress > AbstractPlayer.lastLaserLimit) {
@@ -50,11 +51,35 @@ export abstract class AbstractPlayer {
                 if (body.gameObject === laser) {
                     body.gameObject.setActive(false);
                     body.gameObject.setVisible(false);
+                    body.gameObject.body.checkCollision.none = true;
                 }
               }, laser);
 
             this.lastLaserPress = Date.now();
         }
+    }
+
+    public onLaserCollide(player: typeof this.sprite, laser: any) {
+        if (Date.now() - this.lastLaserEffect > AbstractPlayer.laserEffectLimit) {
+            this.speed /= 2;
+            this.sprite.setVelocityX(this.sprite.body.velocity.x / 2);
+            this.sprite.setVelocityY(this.sprite.body.velocity.y / 2);
+            this.sprite.setTintFill(0xff0000);
+            this.sprite.tintFill = false;
+
+            setTimeout(() => {
+                this.speed *= 2;
+                this.sprite.setVelocityX(this.sprite.body.velocity.x * 2);
+                this.sprite.setVelocityY(this.sprite.body.velocity.y * 2);
+                this.sprite.clearTint();
+            }, AbstractPlayer.laserEffectLimit / 1.2);
+
+            this.lastLaserEffect = Date.now();
+        }
+
+        laser.setActive(false);
+        laser.setVisible(false);
+        laser.body.checkCollision.none = true;
     }
 }
 

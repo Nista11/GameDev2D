@@ -72,6 +72,20 @@ export class MainGame extends Scene
         this.pinkLasers = this.physics.add.group();
         this.blueLasers = this.physics.add.group();
 
+        this.physics.add.collider(
+            this.firstPlayer.sprite, 
+            this.blueLasers, 
+            this.firstPlayer.onLaserCollide as any, 
+            undefined, 
+            this.firstPlayer);
+
+        this.physics.add.collider(
+            this.secondPlayer.sprite, 
+            this.pinkLasers, 
+            this.secondPlayer.onLaserCollide as any, 
+            undefined, 
+            this.secondPlayer);
+
         [Assets.PINK_PLAYER, Assets.BLUE_PLAYER].map(asset => {
             this.anims.create({
                 key: `${asset}_left`,
