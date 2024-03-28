@@ -1,5 +1,6 @@
 import { Scene, GameObjects, Physics, Types } from 'phaser';
 import { Assets, Dimensions, GameObjectsEnum } from '../shared/constants';
+import { Player, PlayerBuilder } from '../shared/types';
 
 export class MainGame extends Scene
 {
@@ -7,7 +8,9 @@ export class MainGame extends Scene
     logo: GameObjects.Image;
     title: GameObjects.Text;
     platforms: Physics.Arcade.StaticGroup;
-    player: Types.Physics.Arcade.SpriteWithDynamicBody;
+    firstPlayer: Player;
+    secondPlayer: Player;
+   // player: Types.Physics.Arcade.SpriteWithDynamicBody;
     ball: Types.Physics.Arcade.SpriteWithDynamicBody;
     cursors: Types.Input.Keyboard.CursorKeys;
     score: number;
@@ -26,12 +29,17 @@ export class MainGame extends Scene
         this.platforms = this.physics.add.staticGroup();
         this.platforms.create(400, 568, GameObjectsEnum.GROUND).setScale(2).refreshBody();
 
-        this.player = this.physics.add.sprite(100, 450, Assets.PLAYER);
+        this.firstPlayer = new PlayerBuilder()
+            .startX(100)
+            .startY(450)
+            .asset(Assets.PLAYER)
+            .withPhysics(this.physics)
+            .build();
 
-        this.player.setBounce(0);
-        this.player.setCollideWorldBounds(true);
+        this.firstPlayer.sprite.setBounce(0);
+        this.firstPlayer.sprite.setCollideWorldBounds(true);
 
-        this.physics.add.collider(this.player, this.platforms);
+        this.physics.add.collider(this.firstPlayer.sprite, this.platforms);
 
         this.ball = this.physics.add.sprite(100, 16, Assets.BALL);
         this.ball.setBounce(0.9);
@@ -40,7 +48,7 @@ export class MainGame extends Scene
 
         this.physics.add.collider(this.ball, this.platforms);
 
-        this.physics.add.collider(this.player, this.ball, this.hitBall as any, undefined, this);
+        this.physics.add.collider(this.firstPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
 
         this.anims.create({
             key: 'left',
@@ -74,30 +82,30 @@ export class MainGame extends Scene
 
         if (this.cursors.left.isDown)
         {
-            this.player.setVelocityX(-speed);
+            this.firstPlayer.sprite.setVelocityX(-speed);
 
-            this.player.anims.play('left', true);
+            this.firstPlayer.sprite.anims.play('left', true);
         }
         else if (this.cursors.right.isDown)
         {
-            this.player.setVelocityX(speed);
+            this.firstPlayer.sprite.setVelocityX(speed);
 
-            this.player.anims.play('right', true);
+            this.firstPlayer.sprite.play('right', true);
         }
         else
         {
-            this.player.setVelocityX(0);
+            this.firstPlayer.sprite.setVelocityX(0);
 
-            this.player.anims.play('turn');
+            this.firstPlayer.sprite.anims.play('turn');
         }
 
-        if (this.cursors.up.isDown && this.player.body.touching.down)
+        if (this.cursors.up.isDown && this.firstPlayer.sprite.body.touching.down)
         {
-            this.player.setVelocityY(-speed * 2);
+            this.firstPlayer.sprite.setVelocityY(-speed * 2);
         }
     }
 
-    hitBall (player: typeof this.player, ball: any)
+    hitBall (player: typeof this.firstPlayer.sprite, ball: any)
     {
         const angle = Phaser.Math.Angle.Between(player.x, player.y, ball.x, ball.y);
 
