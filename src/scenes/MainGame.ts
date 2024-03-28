@@ -117,6 +117,14 @@ export class MainGame extends Scene
             });
         });
 
+        for (let i = 0; i < 10; i++) {
+            this.anims.create({
+                key: `ball_${i}`,
+                frames: [{ key: Assets.BALL, frame: i }],
+                frameRate: 10
+            });
+        }
+
         this.scoreText = this.add.text(
             330, 
             35, 
@@ -133,19 +141,11 @@ export class MainGame extends Scene
     hitBall (player: typeof this.firstPlayer.sprite, ball: any)
     {
         const angle = Phaser.Math.Angle.Between(player.x, player.y, ball.x, ball.y);
-
         const speed = 500;
         const velocityX = Math.cos(angle) * speed;
         const velocityY = Math.sin(angle) * speed;
     
-        // Set the velocities for the ball
         ball.setVelocity(velocityX, velocityY);
-        // this.physics.pause();
-
-        // player.setTint(0xff0000);
-
-        // player.anims.play('turn');
-
-        // this.gameOver = true;
+        this.ball.anims.play(`ball_${Math.floor(Math.random() * 10)}`); // TODO: do it for all ball collisions
     }
 }
