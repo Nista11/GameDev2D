@@ -15,7 +15,7 @@ export class Ball extends DynamicObject {
 
     public update(context: MainGame) {
         this.checkUpdateCurrentLocation();
-        this.checkUpdateTint();
+        this.checkUpdateTint(context);
         this.updateColor();
     }
 
@@ -24,16 +24,19 @@ export class Ball extends DynamicObject {
         if (current !== this.currentLocation) {
             this.currentLocation = current;
             this.currentTint = 0xffffff;
-            this.updateColor();
             this.timeSinceInCurrentLocation = Date.now();
         }
     }
 
-    public checkUpdateTint() {
+    public checkUpdateTint(context: MainGame) {
         if (Date.now() - this.timeSinceLastTintChange > Ball.timeSinceLastTintChangeLimit) {
-            this.currentTint -= 0x001111;
-            this.updateColor();
-            this.timeSinceLastTintChange = Date.now();
+            if (this.currentTint - 0x001111 < 0xff0000) {
+                context.addScore();
+                context.resetAfterScore();
+            } else {
+                this.currentTint -= 0x001111;
+                this.timeSinceLastTintChange = Date.now();
+            }
         }
     }
 
@@ -48,6 +51,14 @@ export class Ball extends DynamicObject {
         } 
 
         return Assets.BLUE_PLAYER;
+    }
+
+    public reset() {
+        super.reset();
+        this.sprite.x = Math.floor(Math.random() * Dimensions.WIDTH);
+        this.timeSinceInCurrentLocation = 0;
+        this.timeSinceLastTintChange = 0;
+        this.currentTint = 0xffffff;
     }
 }
 

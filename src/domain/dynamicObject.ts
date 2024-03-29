@@ -6,6 +6,12 @@ export abstract class DynamicObject {
     public startY: number;
     public asset: Assets;
     public sprite: Types.Physics.Arcade.SpriteWithDynamicBody;
+
+    public reset() {
+        this.sprite.x = this.startX;
+        this.sprite.y = this.startY;
+        this.sprite.setVelocity(0);
+    }
 }
 
 export abstract class DynamicObjectBuilder {

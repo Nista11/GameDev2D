@@ -86,6 +86,13 @@ export abstract class AbstractPlayer extends DynamicObject {
         laser.setVisible(false);
         laser.body.checkCollision.none = true;
     }
+
+    public reset() {
+        super.reset();
+        this.lastLaserPress = 0;
+        this.lastLaserEffect = 0;
+        this.lastJumpPress = 0;
+    }
 }
 
 export class ArrowKeysPlayer extends AbstractPlayer {

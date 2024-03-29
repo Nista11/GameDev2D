@@ -46,14 +46,14 @@ export class MainGame extends Scene
 
         this.firstPlayer = new PlayerBuilder(false)
             .startX(100)
-            .startY(450)
+            .startY(510)
             .asset(Assets.PINK_PLAYER)
             .withPhysics(this.physics)
             .build() as AbstractPlayer;
 
         this.secondPlayer = new PlayerBuilder(true)
             .startX(700)
-            .startY(450)
+            .startY(510)
             .asset(Assets.BLUE_PLAYER)
             .withPhysics(this.physics)
             .build() as AbstractPlayer;
@@ -142,8 +142,7 @@ export class MainGame extends Scene
         this.ball.update(this);
     }
 
-    hitBall (player: typeof this.firstPlayer.sprite, ball: any)
-    {
+    hitBall (player: typeof this.firstPlayer.sprite, ball: any) {
         const angle = Phaser.Math.Angle.Between(player.x, player.y, ball.x, ball.y);
         const speed = 500;
         const velocityX = Math.cos(angle) * speed;
@@ -151,5 +150,19 @@ export class MainGame extends Scene
     
         ball.setVelocity(velocityX, velocityY);
         ball.anims.play(`ball_${Math.floor(Math.random() * 10)}`); // TODO: do it for all ball collisions
+    }
+
+    addScore() {
+        if (this.ball.getCurrentLocation() == Assets.PINK_PLAYER) {
+            this.secondPlayer.score++;
+        } else {
+            this.firstPlayer.score++;
+        }
+
+        this.scoreText.setText(`${this.firstPlayer.score} - ${this.secondPlayer.score}`);
+    }
+
+    resetAfterScore() {
+        this.ball.reset();
     }
 }
