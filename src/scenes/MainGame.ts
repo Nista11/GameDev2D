@@ -188,9 +188,8 @@ export class MainGame extends Scene
         const speed = 500;
         const velocityX = Math.cos(angle) * speed;
         const velocityY = Math.sin(angle) * speed;
-    
+        
         ball.setVelocity(velocityX, velocityY);
-        ball.anims.play(`ball_${Math.floor(Math.random() * 10)}`); // TODO: do it for all ball collisions
     }
 
     addScore() {

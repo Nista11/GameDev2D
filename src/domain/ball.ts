@@ -6,7 +6,7 @@ export class Ball extends DynamicObject {
     public currentLocation: Assets.PINK_PLAYER | Assets.BLUE_PLAYER;
     public timeSinceInCurrentLocation: number;
     public timeSinceLastTintChange = 0;
-    public currentTint = 0xffffff;
+    public currentAnimation = 0;
     public static timeSinceLastTintChangeLimit = 1000;
 
     constructor() {
@@ -15,34 +15,33 @@ export class Ball extends DynamicObject {
 
     public update(context: MainGame) {
         this.checkUpdateCurrentLocation();
-        this.checkUpdateTint(context);
-        this.updateColor();
+        this.checkUpdateAnimation(context);
+        this.updateAnimation();
     }
 
     public checkUpdateCurrentLocation() {
         const current = this.getCurrentLocation();
         if (current !== this.currentLocation) {
             this.currentLocation = current;
-            this.currentTint = 0xffffff;
+            this.currentAnimation = 0;
             this.timeSinceInCurrentLocation = Date.now();
         }
     }
 
-    public checkUpdateTint(context: MainGame) {
+    public checkUpdateAnimation(context: MainGame) {
         if (Date.now() - this.timeSinceLastTintChange > Ball.timeSinceLastTintChangeLimit) {
-            if (this.currentTint - 0x001111 < 0xff0000) {
+            if (this.currentAnimation == 9) {
                 context.addScore();
                 context.resetAfterScore();
             } else {
-                this.currentTint -= 0x001111;
+                this.currentAnimation++;
                 this.timeSinceLastTintChange = Date.now();
             }
         }
     }
 
-    public updateColor() {
-        this.sprite.setTint(this.currentTint);
-        this.sprite.tintFill = false;
+    public updateAnimation() {
+        this.sprite.anims.play(`ball_${this.currentAnimation}`);
     }
 
     public getCurrentLocation(): Assets.PINK_PLAYER | Assets.BLUE_PLAYER {
@@ -58,7 +57,7 @@ export class Ball extends DynamicObject {
         this.sprite.x = Math.floor(Math.random() * Dimensions.WIDTH);
         this.timeSinceInCurrentLocation = 0;
         this.timeSinceLastTintChange = 0;
-        this.currentTint = 0xffffff;
+        this.currentAnimation = 0;
     }
 }
 

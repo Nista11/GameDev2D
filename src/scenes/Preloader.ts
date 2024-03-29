@@ -41,8 +41,8 @@ export class Preloader extends Scene
         
         this.load.image(Assets.BLUE_LASER, 'blue_laser.png');
 
-        this.load.spritesheet(Assets.BALL, 'ball.png', {
-            frameWidth: 49,
+        this.load.spritesheet(Assets.BALL, 'bomb_sprite_combined.png', {
+            frameWidth: 42,
             frameHeight: 42
         });
 
