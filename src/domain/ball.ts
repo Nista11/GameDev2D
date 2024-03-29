@@ -5,9 +5,9 @@ import { DynamicObject, DynamicObjectBuilder } from "./dynamicObject";
 export class Ball extends DynamicObject {
     public currentLocation: Assets.PINK_PLAYER | Assets.BLUE_PLAYER;
     public timeSinceInCurrentLocation: number;
-    public timeSinceLastTintChange = 0;
+    public timeSinceLastAnimationChange = 0;
     public currentAnimation = 0;
-    public static timeSinceLastTintChangeLimit = 1000;
+    public static timeSinceLastAnimationChangeLimit = 1500;
 
     constructor() {
         super();
@@ -24,6 +24,7 @@ export class Ball extends DynamicObject {
         if (current !== this.currentLocation) {
             if (this.currentLocation) {
                 context.backwardsSound.play();
+                context.spaceInvadersSound.setRate(context.initialSpaceInvadersRate);
             }
             this.currentLocation = current;
             this.currentAnimation = 0;
@@ -32,7 +33,7 @@ export class Ball extends DynamicObject {
     }
 
     public checkUpdateAnimation(context: MainGame) {
-        if (Date.now() - this.timeSinceLastTintChange > Ball.timeSinceLastTintChangeLimit) {
+        if (Date.now() - this.timeSinceLastAnimationChange > Ball.timeSinceLastAnimationChangeLimit) {
             if (this.currentAnimation == 9) {
                 context.explosionSound.play();
                 context.showExplosion();
@@ -40,7 +41,10 @@ export class Ball extends DynamicObject {
                 context.resetAfterScore();
             } else {
                 this.currentAnimation++;
-                this.timeSinceLastTintChange = Date.now();
+                if (this.currentAnimation % 4 == 0) {
+                    context.spaceInvadersSound.setRate(context.spaceInvadersSound.rate * 1.1);
+                }
+                this.timeSinceLastAnimationChange = Date.now();
             }
         }
     }
@@ -61,7 +65,7 @@ export class Ball extends DynamicObject {
         super.reset();
         this.sprite.x = Math.floor(Math.random() * Dimensions.WIDTH);
         this.timeSinceInCurrentLocation = 0;
-        this.timeSinceLastTintChange = 0;
+        this.timeSinceLastAnimationChange = 0;
         this.currentAnimation = 0;
         this.currentLocation = this.getCurrentLocation();
     }

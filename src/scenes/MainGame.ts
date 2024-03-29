@@ -28,6 +28,8 @@ export class MainGame extends Scene
     hurtSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     explosionSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     backwardsSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+    spaceInvadersSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+    initialSpaceInvadersRate: number;
 
     constructor ()
     {
@@ -57,6 +59,12 @@ export class MainGame extends Scene
         this.hurtSound.setVolume(3.5);
         this.explosionSound = this.sound.add('explosion');
         this.backwardsSound = this.sound.add('backwards');
+        this.spaceInvadersSound = this.sound.add('space_invaders');
+        this.initialSpaceInvadersRate = this.spaceInvadersSound.rate;
+        this.spaceInvadersSound.setVolume(4);
+        this.spaceInvadersSound.play();
+        this.spaceInvadersSound.loop = true;
+
     }
 
     createInputs() {
@@ -238,5 +246,6 @@ export class MainGame extends Scene
 
     resetAfterScore() {
         this.ball.reset();
+        this.spaceInvadersSound.setRate(this.initialSpaceInvadersRate);
     }
 }
