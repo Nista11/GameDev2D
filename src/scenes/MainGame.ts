@@ -62,7 +62,7 @@ export class MainGame extends Scene
         this.physics.add.collider(this.secondPlayer.sprite, this.platforms);
 
         this.ball = new BallBuilder()
-            .startX(100)
+            .startX(Math.floor(Math.random() * Dimensions.WIDTH))
             .startY(16)
             .asset(Assets.BALL)
             .withPhysics(this.physics)
@@ -139,6 +139,7 @@ export class MainGame extends Scene
     update(time: number, delta: number): void {
         this.firstPlayer.update(this);
         this.secondPlayer.update(this);
+        this.ball.update(this);
     }
 
     hitBall (player: typeof this.firstPlayer.sprite, ball: any)

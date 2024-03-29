@@ -65,16 +65,17 @@ export abstract class AbstractPlayer extends DynamicObject {
 
     public onLaserCollide(player: typeof this.sprite, laser: any) {
         if (Date.now() - this.lastLaserEffect > AbstractPlayer.laserEffectLimit) {
-            this.speed /= 2;
-            this.sprite.setVelocityX(this.sprite.body.velocity.x / 2);
-            this.sprite.setVelocityY(this.sprite.body.velocity.y / 2);
+            const scaleFactor = 1.5;
+            this.speed /= scaleFactor;
+            this.sprite.setVelocityX(this.sprite.body.velocity.x / scaleFactor);
+            this.sprite.setVelocityY(this.sprite.body.velocity.y / scaleFactor);
             this.sprite.setTintFill(0xff0000);
             this.sprite.tintFill = false;
 
             setTimeout(() => {
-                this.speed *= 2;
-                this.sprite.setVelocityX(this.sprite.body.velocity.x * 2);
-                this.sprite.setVelocityY(this.sprite.body.velocity.y * 2);
+                this.speed *= scaleFactor;
+                this.sprite.setVelocityX(this.sprite.body.velocity.x * scaleFactor);
+                this.sprite.setVelocityY(this.sprite.body.velocity.y * scaleFactor);
                 this.sprite.clearTint();
             }, AbstractPlayer.laserEffectLimit / 1.2);
 
