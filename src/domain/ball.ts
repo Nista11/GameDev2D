@@ -4,6 +4,7 @@ import { DynamicObject, DynamicObjectBuilder } from "./dynamicObject";
 
 export class Ball extends DynamicObject {
     public currentLocation: Assets.PINK_PLAYER | Assets.BLUE_PLAYER;
+    public lastSpawnLocation: Assets.PINK_PLAYER | Assets.BLUE_PLAYER;
     public timeSinceInCurrentLocation: number;
     public timeSinceLastAnimationChange = 0;
     public currentAnimation = 0;
@@ -63,11 +64,17 @@ export class Ball extends DynamicObject {
 
     public reset() {
         super.reset();
-        this.sprite.x = Math.floor(Math.random() * Dimensions.WIDTH);
+        if (this.lastSpawnLocation === Assets.PINK_PLAYER) {
+            this.sprite.x = Math.floor(Math.random() * Dimensions.WIDTH / 2 + Dimensions.WIDTH / 2);
+        }
+        else {
+            this.sprite.x = Math.floor(Math.random() * Dimensions.WIDTH / 2);
+        }
         this.timeSinceInCurrentLocation = 0;
         this.timeSinceLastAnimationChange = 0;
         this.currentAnimation = 0;
         this.currentLocation = this.getCurrentLocation();
+        this.lastSpawnLocation = this.currentLocation;
     }
 }
 

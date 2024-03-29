@@ -108,6 +108,8 @@ export class MainGame extends Scene
             .withPhysics(this.physics)
             .build() as Ball;
 
+        this.ball.lastSpawnLocation = this.ball.getCurrentLocation();
+
         this.ball.sprite.setScale(1.2);
             
         this.physics.add.collider(this.ball.sprite, this.platforms);
