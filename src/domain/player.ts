@@ -1,12 +1,9 @@
-import { Physics, Types } from "phaser";
+import { Physics } from "phaser";
 import { Assets } from "../shared/constants";
 import { MainGame } from "../scenes/MainGame";
+import { DynamicObject, DynamicObjectBuilder } from "./dynamicObject";
 
-export abstract class AbstractPlayer {
-    public startX: number;
-    public startY: number;
-    public asset: Assets;
-    public sprite: Types.Physics.Arcade.SpriteWithDynamicBody;
+export abstract class AbstractPlayer extends DynamicObject {
     public score = 0;
     public lastLaserPress = 0;
     public lastLaserEffect = 0;
@@ -134,47 +131,25 @@ export class WasdKeysPlayer extends AbstractPlayer {
     }
 }
 
-export class PlayerBuilder {
-    private playerInstance: AbstractPlayer;
+export class PlayerBuilder extends DynamicObjectBuilder {
+    protected objectInstance: AbstractPlayer;
 
     public constructor(arrowKeys: boolean) {
+        super();
         if (arrowKeys) {
-            this.playerInstance = new ArrowKeysPlayer();
+            this.objectInstance = new ArrowKeysPlayer();
         } else {
-            this.playerInstance = new WasdKeysPlayer();
+            this.objectInstance = new WasdKeysPlayer();
         }
 
         return this;
     }
 
-    public startX(startX: number) {
-        this.playerInstance.startX = startX;
-        return this;
-    }
-
-    public startY(startY: number) {
-        this.playerInstance.startY = startY;
-        return this;
-    }
-
-    public asset(asset: Assets) {
-        this.playerInstance.asset = asset;
-        return this;
-    }
-
     public withPhysics(physics: Physics.Arcade.ArcadePhysics) {
-        this.playerInstance.sprite = physics.add.sprite(
-            this.playerInstance.startX, 
-            this.playerInstance.startY, 
-            this.playerInstance.asset.toString());
-
-        this.playerInstance.sprite.setBounce(0);
-        this.playerInstance.sprite.setCollideWorldBounds(true);
+        this.addToPhysics(physics);
+        this.objectInstance.sprite.setBounce(0);
+        this.objectInstance.sprite.setCollideWorldBounds(true);
 
         return this;
-    }
-
-    public build(): AbstractPlayer {
-        return this.playerInstance;
     }
 }

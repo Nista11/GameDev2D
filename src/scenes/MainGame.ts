@@ -1,6 +1,7 @@
 import { Scene, GameObjects, Physics, Types } from 'phaser';
 import { Assets, Dimensions, GameObjectsEnum } from '../shared/constants';
 import { AbstractPlayer, PlayerBuilder } from '../domain/player';
+import { Ball, BallBuilder } from '../domain/ball';
 
 export class MainGame extends Scene
 {
@@ -10,7 +11,7 @@ export class MainGame extends Scene
     platforms: Physics.Arcade.StaticGroup;
     firstPlayer: AbstractPlayer;
     secondPlayer: AbstractPlayer;
-    ball: Types.Physics.Arcade.SpriteWithDynamicBody;
+    ball: Ball;
     pinkLasers: Physics.Arcade.Group;
     blueLasers: Physics.Arcade.Group;
     middleWall: Types.Physics.Arcade.SpriteWithStaticBody;
@@ -48,27 +49,29 @@ export class MainGame extends Scene
             .startY(450)
             .asset(Assets.PINK_PLAYER)
             .withPhysics(this.physics)
-            .build();
+            .build() as AbstractPlayer;
 
         this.secondPlayer = new PlayerBuilder(true)
             .startX(700)
             .startY(450)
             .asset(Assets.BLUE_PLAYER)
             .withPhysics(this.physics)
-            .build();
+            .build() as AbstractPlayer;
 
         this.physics.add.collider(this.firstPlayer.sprite, this.platforms);
         this.physics.add.collider(this.secondPlayer.sprite, this.platforms);
 
-        this.ball = this.physics.add.sprite(100, 16, Assets.BALL);
-        this.ball.setBounce(0.9);
-        this.ball.setCollideWorldBounds(true);
-        this.ball.setVelocity(0);
+        this.ball = new BallBuilder()
+            .startX(100)
+            .startY(16)
+            .asset(Assets.BALL)
+            .withPhysics(this.physics)
+            .build() as Ball;
+            
+        this.physics.add.collider(this.ball.sprite, this.platforms);
 
-        this.physics.add.collider(this.ball, this.platforms);
-
-        this.physics.add.collider(this.firstPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
-        this.physics.add.collider(this.secondPlayer.sprite, this.ball, this.hitBall as any, undefined, this);
+        this.physics.add.collider(this.firstPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
+        this.physics.add.collider(this.secondPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
 
         this.pinkLasers = this.physics.add.group();
         this.blueLasers = this.physics.add.group();
@@ -146,6 +149,6 @@ export class MainGame extends Scene
         const velocityY = Math.sin(angle) * speed;
     
         ball.setVelocity(velocityX, velocityY);
-        this.ball.anims.play(`ball_${Math.floor(Math.random() * 10)}`); // TODO: do it for all ball collisions
+        ball.anims.play(`ball_${Math.floor(Math.random() * 10)}`); // TODO: do it for all ball collisions
     }
 }
