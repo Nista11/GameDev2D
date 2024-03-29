@@ -6,7 +6,8 @@ export const enum Assets {
     BLUE_PLAYER = 'blue_player',
     NET = 'net',
     PINK_LASER = 'pink_laser',
-    BLUE_LASER = 'blue_laser'
+    BLUE_LASER = 'blue_laser',
+    HEART = 'heart'
 };
 
 export const enum GameObjectsEnum {

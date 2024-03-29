@@ -41,7 +41,7 @@ export class Ball extends DynamicObject {
                 context.resetAfterScore();
             } else {
                 this.currentAnimation++;
-                if (this.currentAnimation % 4 == 0) {
+                if (this.currentAnimation % 3 == 0) {
                     context.spaceInvadersSound.setRate(context.spaceInvadersSound.rate * 1.1);
                 }
                 this.timeSinceLastAnimationChange = Date.now();

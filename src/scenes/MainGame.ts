@@ -17,7 +17,6 @@ export class MainGame extends Scene
     middleWall: Types.Physics.Arcade.SpriteWithStaticBody;
     explosionOverlay: GameObjects.Rectangle;
     cursors: Types.Input.Keyboard.CursorKeys;
-    scoreText: GameObjects.Text;
     gameOver: boolean;
     keyW: Phaser.Input.Keyboard.Key | undefined;
     keyA: Phaser.Input.Keyboard.Key | undefined;
@@ -30,6 +29,7 @@ export class MainGame extends Scene
     backwardsSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     spaceInvadersSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     initialSpaceInvadersRate: number;
+    hearts: Types.Physics.Arcade.SpriteWithStaticBody[];
 
     constructor ()
     {
@@ -47,7 +47,7 @@ export class MainGame extends Scene
         this.createLasers();
         this.createMiddleWall();
         this.createExplosionOverlay();
-        this.createScoreText();
+        this.createHearts();
         this.createPlayerAnimations();
         this.createBallAnimations();
         this.gameOver = false;
@@ -198,12 +198,27 @@ export class MainGame extends Scene
         this.explosionOverlay.setAlpha(0);
     }
 
-    createScoreText() {
-        this.scoreText = this.add.text(
-            330, 
-            35, 
-            `${this.firstPlayer.score} - ${this.secondPlayer.score}`,
-            { fontSize: '45px', color: '#000' });
+    createHearts() {
+        this.hearts = [];
+        for (let i = 0; i < 11; i++) {
+            const heart = this.physics.add.staticSprite(50 * i + 170, 60, Assets.HEART).setScale(.03).refreshBody();
+            this.hearts.push(heart);
+            if (i == 4) {
+                i++;
+            }
+        }
+    }
+
+    updateHearts() {
+        for (let i = 4; i >= this.firstPlayer.lives; i--) {
+            this.hearts[i].setTintFill(0x0);
+            this.hearts[i].tintFill = false;
+        }
+
+        for (let i = 5; i < 10 - this.secondPlayer.lives; i++) {
+            this.hearts[i].setTintFill(0x0);
+            this.hearts[i].tintFill = false;
+        }
     }
 
     update(time: number, delta: number): void {
@@ -236,12 +251,12 @@ export class MainGame extends Scene
 
     addScore() {
         if (this.ball.getCurrentLocation() == Assets.PINK_PLAYER) {
-            this.secondPlayer.score++;
+            this.firstPlayer.lives--;
         } else {
-            this.firstPlayer.score++;
+            this.secondPlayer.lives--;
         }
 
-        this.scoreText.setText(`${this.firstPlayer.score} - ${this.secondPlayer.score}`);
+        this.updateHearts();
     }
 
     resetAfterScore() {
