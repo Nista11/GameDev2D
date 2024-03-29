@@ -17,7 +17,6 @@ export class MainGame extends Scene
     middleWall: Types.Physics.Arcade.SpriteWithStaticBody;
     explosionOverlay: GameObjects.Rectangle;
     cursors: Types.Input.Keyboard.CursorKeys;
-    gameOver: boolean;
     keyW: Phaser.Input.Keyboard.Key | undefined;
     keyA: Phaser.Input.Keyboard.Key | undefined;
     keyS: Phaser.Input.Keyboard.Key | undefined;
@@ -50,7 +49,6 @@ export class MainGame extends Scene
         this.createHearts();
         this.createPlayerAnimations();
         this.createBallAnimations();
-        this.gameOver = false;
     }
 
     createSounds() {
@@ -256,7 +254,16 @@ export class MainGame extends Scene
             this.secondPlayer.lives--;
         }
 
+        if (this.firstPlayer.lives == 0 || this.secondPlayer.lives == 0) {
+            this.gameOver();
+        }
+
         this.updateHearts();
+    }
+
+    gameOver() {
+        this.spaceInvadersSound.stop();
+        this.scene.start('GameOver', { firstPlayerWon: this.firstPlayer.lives != 0 });
     }
 
     resetAfterScore() {
