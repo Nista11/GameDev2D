@@ -59,6 +59,7 @@ export abstract class AbstractPlayer extends DynamicObject {
                 }
               }, laser);
 
+            context.laserSound.play();
             this.lastLaserPress = Date.now();
         }
     }
@@ -77,7 +78,7 @@ export abstract class AbstractPlayer extends DynamicObject {
                 this.sprite.setVelocityX(this.sprite.body.velocity.x * scaleFactor);
                 this.sprite.setVelocityY(this.sprite.body.velocity.y * scaleFactor);
                 this.sprite.clearTint();
-            }, AbstractPlayer.laserEffectLimit / 1.2);
+            }, AbstractPlayer.laserEffectLimit);
 
             this.lastLaserEffect = Date.now();
         }

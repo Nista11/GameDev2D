@@ -55,6 +55,9 @@ export class Preloader extends Scene
             frameWidth: 31.33,
             frameHeight: 42
         });
+
+        this.load.audio('laser', ['laser-gun.mp3']);
+        this.load.audio('hurt', ['hurt_c_08.mp3']);
     }
 
     create ()

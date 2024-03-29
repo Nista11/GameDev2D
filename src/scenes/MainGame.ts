@@ -23,6 +23,8 @@ export class MainGame extends Scene
     keyS: Phaser.Input.Keyboard.Key | undefined;
     keyD: Phaser.Input.Keyboard.Key | undefined;
     keyC: Phaser.Input.Keyboard.Key | undefined;
+    laserSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+    hurtSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
 
     constructor ()
     {
@@ -32,18 +34,46 @@ export class MainGame extends Scene
     create ()
     {
         this.background = this.add.image(Dimensions.WIDTH / 2, Dimensions.HEIGHT / 2, Assets.SKY);
+        this.createSounds();
+        this.createInputs();
+        this.createPlatforms();
+        this.createPlayers();
+        this.createBall();
+        this.createLasers();
+        this.createMiddleWall();
+        this.createPlayerAnimations();
+        this.createBallAnimations();
+
+        this.scoreText = this.add.text(
+            330, 
+            35, 
+            `${this.firstPlayer.score} - ${this.secondPlayer.score}`,
+            { fontSize: '45px', color: '#000' });
+        this.gameOver = false;
+    }
+
+    createSounds() {
+        this.laserSound = this.sound.add('laser');
+        this.hurtSound = this.sound.add('hurt');
+    }
+
+    createInputs() {
         this.keyW = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyA = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyS = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyD = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keyC = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.C);
-
+        
         this.cursors = this.input.keyboard?.createCursorKeys() as any;
+    }
 
+    createPlatforms() {
         this.platforms = this.physics.add.staticGroup();
         this.platforms.create(400, 568, GameObjectsEnum.GROUND).setScale(2).refreshBody();
         this.platforms.create(400, 436, GameObjectsEnum.NET).setScale(.5).refreshBody();
+    }
 
+    createPlayers() {
         this.firstPlayer = new PlayerBuilder(false)
             .startX(100)
             .startY(510)
@@ -60,7 +90,9 @@ export class MainGame extends Scene
 
         this.physics.add.collider(this.firstPlayer.sprite, this.platforms);
         this.physics.add.collider(this.secondPlayer.sprite, this.platforms);
+    }
 
+    createBall() {
         this.ball = new BallBuilder()
             .startX(Math.floor(Math.random() * Dimensions.WIDTH))
             .startY(16)
@@ -69,10 +101,11 @@ export class MainGame extends Scene
             .build() as Ball;
             
         this.physics.add.collider(this.ball.sprite, this.platforms);
-
         this.physics.add.collider(this.firstPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
         this.physics.add.collider(this.secondPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
+    }
 
+    createLasers() {
         this.pinkLasers = this.physics.add.group();
         this.blueLasers = this.physics.add.group();
 
@@ -80,16 +113,26 @@ export class MainGame extends Scene
             this.firstPlayer.sprite, 
             this.blueLasers, 
             this.firstPlayer.onLaserCollide as any, 
-            undefined, 
+            () => {
+                if (Date.now() - this.firstPlayer.lastLaserEffect > AbstractPlayer.laserEffectLimit) {
+                    this.hurtSound.play();
+                }
+            }, 
             this.firstPlayer);
 
         this.physics.add.collider(
             this.secondPlayer.sprite, 
             this.pinkLasers, 
             this.secondPlayer.onLaserCollide as any, 
-            undefined, 
+            () => {
+                if (Date.now() - this.secondPlayer.lastLaserEffect > AbstractPlayer.laserEffectLimit) {
+                    this.hurtSound.play();
+                }
+            }, 
             this.secondPlayer);
+    }
 
+    createMiddleWall() {
         this.middleWall = this.physics.add.staticSprite(400, 170, Assets.NET).setScale(.5).refreshBody();
         this.middleWall.scaleY = .85;
         this.middleWall.setVisible(false);
@@ -97,7 +140,9 @@ export class MainGame extends Scene
         this.middleWall.refreshBody();
         this.physics.add.collider(this.firstPlayer.sprite, this.middleWall);
         this.physics.add.collider(this.secondPlayer.sprite, this.middleWall);
+    }
 
+    createPlayerAnimations() {
         [Assets.PINK_PLAYER, Assets.BLUE_PLAYER].map(asset => {
             this.anims.create({
                 key: `${asset}_left`,
@@ -119,7 +164,9 @@ export class MainGame extends Scene
                 repeat: -1
             });
         });
+    }
 
+    createBallAnimations() {
         for (let i = 0; i < 10; i++) {
             this.anims.create({
                 key: `ball_${i}`,
@@ -127,13 +174,6 @@ export class MainGame extends Scene
                 frameRate: 10
             });
         }
-
-        this.scoreText = this.add.text(
-            330, 
-            35, 
-            `${this.firstPlayer.score} - ${this.secondPlayer.score}`,
-            { fontSize: '45px', color: '#000' });
-        this.gameOver = false;
     }
 
     update(time: number, delta: number): void {
