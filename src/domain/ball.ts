@@ -14,14 +14,17 @@ export class Ball extends DynamicObject {
     }
 
     public update(context: MainGame) {
-        this.checkUpdateCurrentLocation();
+        this.checkUpdateCurrentLocation(context);
         this.checkUpdateAnimation(context);
         this.updateAnimation();
     }
 
-    public checkUpdateCurrentLocation() {
+    public checkUpdateCurrentLocation(context: MainGame) {
         const current = this.getCurrentLocation();
         if (current !== this.currentLocation) {
+            if (this.currentLocation) {
+                context.backwardsSound.play();
+            }
             this.currentLocation = current;
             this.currentAnimation = 0;
             this.timeSinceInCurrentLocation = Date.now();
@@ -60,6 +63,7 @@ export class Ball extends DynamicObject {
         this.timeSinceInCurrentLocation = 0;
         this.timeSinceLastTintChange = 0;
         this.currentAnimation = 0;
+        this.currentLocation = this.getCurrentLocation();
     }
 }
 

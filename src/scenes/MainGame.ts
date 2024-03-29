@@ -27,6 +27,7 @@ export class MainGame extends Scene
     laserSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     hurtSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     explosionSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+    backwardsSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
 
     constructor ()
     {
@@ -55,6 +56,7 @@ export class MainGame extends Scene
         this.hurtSound = this.sound.add('hurt');
         this.hurtSound.setVolume(3.5);
         this.explosionSound = this.sound.add('explosion');
+        this.backwardsSound = this.sound.add('backwards');
     }
 
     createInputs() {
@@ -217,7 +219,7 @@ export class MainGame extends Scene
         } else {
             this.explosionOverlay.setX(Dimensions.WIDTH / 1.32);
         }
-        
+
         this.explosionOverlay.setAlpha(1);
         setTimeout(() => {
             this.explosionOverlay.setAlpha(0);
