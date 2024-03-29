@@ -55,6 +55,7 @@ export class MainGame extends Scene
     createSounds() {
         this.laserSound = this.sound.add('laser');
         this.hurtSound = this.sound.add('hurt');
+        this.hurtSound.setVolume(3.5);
     }
 
     createInputs() {
