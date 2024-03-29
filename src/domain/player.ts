@@ -10,9 +10,11 @@ export abstract class AbstractPlayer {
     public score = 0;
     public lastLaserPress = 0;
     public lastLaserEffect = 0;
+    public lastJumpPress = 0;
     public speed = 300;
     public static laserEffectLimit = 2500;
     public static lastLaserLimit = 750;
+    public static jumpLimit = 500;
 
     public abstract isUpPressed(context: MainGame): boolean;
     public abstract isRightPressed(context: MainGame): boolean;
@@ -32,8 +34,13 @@ export abstract class AbstractPlayer {
             this.sprite.anims.play(`${this.asset}_turn`);
         }
 
-        if (this.isUpPressed(context) && this.sprite.body.touching.down) {
-            this.sprite.setVelocityY(-this.speed * 1.7);
+        if (this.isUpPressed(context)) {
+            if (this.sprite.body.touching.down) {
+                this.sprite.setVelocityY(-this.speed);
+                this.lastJumpPress = Date.now();
+            } else if (this.sprite.body.velocity.y < 0 && Date.now() - this.lastJumpPress < AbstractPlayer.jumpLimit) {
+                this.sprite.setVelocityY(this.sprite.body.velocity.y * 1.04);
+            }
         }
 
         if (this.isLaserKeyPressed(context) && Date.now() - this.lastLaserPress > AbstractPlayer.lastLaserLimit) {
