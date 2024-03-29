@@ -58,6 +58,7 @@ export class Preloader extends Scene
 
         this.load.audio('laser', ['laser-gun.mp3']);
         this.load.audio('hurt', ['hurt_c_08.mp3']);
+        this.load.audio('explosion', ['explosion.mp3']);
     }
 
     create ()

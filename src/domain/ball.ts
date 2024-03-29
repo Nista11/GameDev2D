@@ -31,6 +31,8 @@ export class Ball extends DynamicObject {
     public checkUpdateAnimation(context: MainGame) {
         if (Date.now() - this.timeSinceLastTintChange > Ball.timeSinceLastTintChangeLimit) {
             if (this.currentAnimation == 9) {
+                context.explosionSound.play();
+                context.showExplosion();
                 context.addScore();
                 context.resetAfterScore();
             } else {

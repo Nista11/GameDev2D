@@ -15,6 +15,7 @@ export class MainGame extends Scene
     pinkLasers: Physics.Arcade.Group;
     blueLasers: Physics.Arcade.Group;
     middleWall: Types.Physics.Arcade.SpriteWithStaticBody;
+    explosionOverlay: GameObjects.Rectangle;
     cursors: Types.Input.Keyboard.CursorKeys;
     scoreText: GameObjects.Text;
     gameOver: boolean;
@@ -25,6 +26,7 @@ export class MainGame extends Scene
     keyC: Phaser.Input.Keyboard.Key | undefined;
     laserSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     hurtSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+    explosionSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
 
     constructor ()
     {
@@ -41,14 +43,10 @@ export class MainGame extends Scene
         this.createBall();
         this.createLasers();
         this.createMiddleWall();
+        this.createExplosionOverlay();
+        this.createScoreText();
         this.createPlayerAnimations();
         this.createBallAnimations();
-
-        this.scoreText = this.add.text(
-            330, 
-            35, 
-            `${this.firstPlayer.score} - ${this.secondPlayer.score}`,
-            { fontSize: '45px', color: '#000' });
         this.gameOver = false;
     }
 
@@ -56,6 +54,7 @@ export class MainGame extends Scene
         this.laserSound = this.sound.add('laser');
         this.hurtSound = this.sound.add('hurt');
         this.hurtSound.setVolume(3.5);
+        this.explosionSound = this.sound.add('explosion');
     }
 
     createInputs() {
@@ -100,6 +99,8 @@ export class MainGame extends Scene
             .asset(Assets.BALL)
             .withPhysics(this.physics)
             .build() as Ball;
+
+        this.ball.sprite.setScale(1.2);
             
         this.physics.add.collider(this.ball.sprite, this.platforms);
         this.physics.add.collider(this.firstPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
@@ -177,6 +178,24 @@ export class MainGame extends Scene
         }
     }
 
+    createExplosionOverlay() {
+        this.explosionOverlay = this.add.rectangle(
+            0, 
+            Dimensions.HEIGHT / 2, 
+            Dimensions.WIDTH / 2, 
+            Dimensions.HEIGHT, 
+            0xffa906);
+        this.explosionOverlay.setAlpha(0);
+    }
+
+    createScoreText() {
+        this.scoreText = this.add.text(
+            330, 
+            35, 
+            `${this.firstPlayer.score} - ${this.secondPlayer.score}`,
+            { fontSize: '45px', color: '#000' });
+    }
+
     update(time: number, delta: number): void {
         this.firstPlayer.update(this);
         this.secondPlayer.update(this);
@@ -188,8 +207,21 @@ export class MainGame extends Scene
         const speed = 500;
         const velocityX = Math.cos(angle) * speed;
         const velocityY = Math.sin(angle) * speed;
-        
+
         ball.setVelocity(velocityX, velocityY);
+    }
+
+    showExplosion() {
+        if (this.ball.getCurrentLocation() == Assets.PINK_PLAYER) {
+            this.explosionOverlay.setX(Dimensions.WIDTH / 4 - 8);
+        } else {
+            this.explosionOverlay.setX(Dimensions.WIDTH / 1.32);
+        }
+        
+        this.explosionOverlay.setAlpha(1);
+        setTimeout(() => {
+            this.explosionOverlay.setAlpha(0);
+        }, 500);
     }
 
     addScore() {
