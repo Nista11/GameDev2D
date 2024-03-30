@@ -76,6 +76,7 @@ export class Ball extends DynamicObject {
         this.currentAnimation = 0;
         this.currentLocation = this.getCurrentLocation();
         this.lastSpawnLocation = this.currentLocation;
+        this.sprite.setRotation(0);
     }
 }
 

@@ -233,6 +233,7 @@ export class MainGame extends Scene
 
         ball.setVelocity(velocityX, velocityY);
         this.playBounce();
+        this.ball.sprite.setRotation(Math.random() * 2 * Math.PI);
     }
 
     playBounce() {
