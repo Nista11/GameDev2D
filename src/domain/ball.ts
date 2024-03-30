@@ -25,7 +25,7 @@ export class Ball extends DynamicObject {
         if (current !== this.currentLocation) {
             if (this.currentLocation) {
                 context.backwardsSound.play();
-                context.spaceInvadersSound.setRate(context.initialSpaceInvadersRate);
+                context.pianoNotes.forEach(note=> note.setRate(.25));
             }
             this.currentLocation = current;
             this.currentAnimation = 0;
@@ -44,7 +44,7 @@ export class Ball extends DynamicObject {
             } else {
                 this.currentAnimation++;
                 if (this.currentAnimation % 3 == 0) {
-                    context.spaceInvadersSound.setRate(context.spaceInvadersSound.rate * 1.1);
+                    context.pianoNotes.forEach(note => note.setRate(note.rate * 2));
                 }
                 this.timeSinceLastAnimationChange = Date.now();
             }

@@ -8,7 +8,7 @@ export class GameOver extends Scene {
     background: Phaser.GameObjects.Image;
     playerSprite: Phaser.GameObjects.Sprite;
     crown: Phaser.GameObjects.Image;
-    victorySound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+    victorySound: PhaserSound
 
     constructor() {
         super('GameOver');

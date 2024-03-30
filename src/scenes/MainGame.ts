@@ -2,6 +2,7 @@ import { Scene, GameObjects, Physics, Types } from 'phaser';
 import { Assets, Dimensions, GameObjectsEnum } from '../shared/constants';
 import { AbstractPlayer, PlayerBuilder } from '../domain/player';
 import { Ball, BallBuilder } from '../domain/ball';
+import { PhaserSound } from '../shared/types';
 
 export class MainGame extends Scene
 {
@@ -22,13 +23,11 @@ export class MainGame extends Scene
     keyS: Phaser.Input.Keyboard.Key | undefined;
     keyD: Phaser.Input.Keyboard.Key | undefined;
     keyC: Phaser.Input.Keyboard.Key | undefined;
-    laserSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
-    hurtSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
-    explosionSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
-    backwardsSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
-    spaceInvadersSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
-    bounceSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
-    initialSpaceInvadersRate: number;
+    laserSound: PhaserSound;
+    hurtSound: PhaserSound
+    explosionSound: PhaserSound
+    backwardsSound: PhaserSound
+    pianoNotes: PhaserSound[];
     hearts: Types.Physics.Arcade.SpriteWithStaticBody[];
 
     constructor ()
@@ -58,13 +57,10 @@ export class MainGame extends Scene
         this.hurtSound.setVolume(3.5);
         this.explosionSound = this.sound.add('explosion');
         this.backwardsSound = this.sound.add('backwards');
-        this.bounceSound = this.sound.add('bounce');
-        this.bounceSound.setVolume(2);
-        this.spaceInvadersSound = this.sound.add('space_invaders');
-        this.initialSpaceInvadersRate = this.spaceInvadersSound.rate;
-        this.spaceInvadersSound.setVolume(4);
-        this.spaceInvadersSound.play();
-        this.spaceInvadersSound.loop = true;
+        this.pianoNotes = 'abcde'.split('').map(note => {
+            const newSound = this.sound.add(`${note}6`);
+            return newSound.setRate(.25);
+        });
     }
 
     createInputs() {
@@ -240,7 +236,7 @@ export class MainGame extends Scene
     }
 
     playBounce() {
-        this.bounceSound.play();
+        this.pianoNotes[Math.floor(Math.random() * this.pianoNotes.length)].play();
     }
 
     showExplosion() {
@@ -271,12 +267,11 @@ export class MainGame extends Scene
     }
 
     gameOver() {
-        this.spaceInvadersSound.stop();
         this.scene.start('GameOver', { firstPlayerWon: this.firstPlayer.lives != 0 });
     }
 
     resetAfterScore() {
         this.ball.reset();
-        this.spaceInvadersSound.setRate(this.initialSpaceInvadersRate);
+        this.pianoNotes.forEach(note => note.setRate(.25));
     }
 }
