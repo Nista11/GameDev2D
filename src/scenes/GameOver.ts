@@ -30,7 +30,11 @@ export class GameOver extends Scene {
         this.playerSprite = this.add.sprite(Dimensions.WIDTH / 2, 383, this.winner);
         this.playerSprite.anims.play(`${this.winner}_turn`, true);
         this.crown = this.add.sprite(Dimensions.WIDTH / 2, 383 - 16, Assets.CROWN).setScale(.055);
-        this.text = this.add.text(325, 200, `${this.winner === Assets.PINK_PLAYER ? 'First' : 'Second'} player won!\nPress R to restart`);
+        this.text = this.add.text(
+            285, 
+            195, 
+            `${this.winner === Assets.PINK_PLAYER ? 'First' : 'Second'} player won!\nPress R to restart`,
+            { fontSize: '24px', color: '#000' });
         this.keyR = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     }
 
