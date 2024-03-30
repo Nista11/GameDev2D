@@ -221,7 +221,7 @@ export class MainGame extends Scene
         }
     }
 
-    update(time: number, delta: number): void {
+    update() {
         this.firstPlayer.update(this);
         this.secondPlayer.update(this);
         this.ball.update(this);
