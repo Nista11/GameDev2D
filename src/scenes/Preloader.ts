@@ -71,6 +71,7 @@ export class Preloader extends Scene
         this.load.audio('d6', ['d6.mp3']); 
         this.load.audio('e6', ['e6.mp3']); 
         this.load.audio('f6', ['f6.mp3']);  
+        this.load.audio('g6', ['g6.mp3']);  
     }
 
     create ()

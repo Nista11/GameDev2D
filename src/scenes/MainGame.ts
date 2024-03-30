@@ -57,9 +57,9 @@ export class MainGame extends Scene
         this.hurtSound.setVolume(3.5);
         this.explosionSound = this.sound.add('explosion');
         this.backwardsSound = this.sound.add('backwards');
-        this.pianoNotes = 'abcde'.split('').map(note => {
+        this.pianoNotes = 'abcdefg'.split('').map(note => {
             const newSound = this.sound.add(`${note}6`);
-            return newSound.setRate(.25);
+            return newSound.setRate(.25).setVolume(2);
         });
     }
 
