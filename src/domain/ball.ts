@@ -6,7 +6,7 @@ export class Ball extends DynamicObject {
     public currentLocation: Assets.PINK_PLAYER | Assets.BLUE_PLAYER;
     public lastSpawnLocation: Assets.PINK_PLAYER | Assets.BLUE_PLAYER;
     public timeSinceInCurrentLocation: number;
-    public timeSinceLastAnimationChange = 0;
+    public timeSinceLastAnimationChange = Date.now();
     public currentAnimation = 0;
     public static timeSinceLastAnimationChangeLimit = 1500;
 
@@ -29,6 +29,7 @@ export class Ball extends DynamicObject {
             }
             this.currentLocation = current;
             this.currentAnimation = 0;
+            this.timeSinceInCurrentLocation = Date.now();
             this.timeSinceInCurrentLocation = Date.now();
         }
     }
@@ -71,7 +72,7 @@ export class Ball extends DynamicObject {
             this.sprite.x = Math.floor(Math.random() * Dimensions.WIDTH / 2);
         }
         this.timeSinceInCurrentLocation = 0;
-        this.timeSinceLastAnimationChange = 0;
+        this.timeSinceLastAnimationChange = Date.now();
         this.currentAnimation = 0;
         this.currentLocation = this.getCurrentLocation();
         this.lastSpawnLocation = this.currentLocation;
