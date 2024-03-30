@@ -65,13 +65,7 @@ export class Preloader extends Scene
         this.load.audio('explosion', ['explosion.mp3']);
         this.load.audio('backwards', ['backwards_trimmed.mp3']);
         this.load.audio('victory', ['revolutionary_etude_ending.mp3']);
-        this.load.audio('a6', ['a6.mp3']); 
-        this.load.audio('b6', ['b6.mp3']); 
-        this.load.audio('c6', ['c6.mp3']); 
-        this.load.audio('d6', ['d6.mp3']); 
-        this.load.audio('e6', ['e6.mp3']); 
-        this.load.audio('f6', ['f6.mp3']);  
-        this.load.audio('g6', ['g6.mp3']);  
+        'abcdefg'.split('').forEach(note => this.load.audio(`${note}6`, [`${note}6.mp3`])); 
     }
 
     create ()
