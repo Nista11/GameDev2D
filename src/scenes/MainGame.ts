@@ -27,6 +27,7 @@ export class MainGame extends Scene
     explosionSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     backwardsSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     spaceInvadersSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+    bounceSound: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
     initialSpaceInvadersRate: number;
     hearts: Types.Physics.Arcade.SpriteWithStaticBody[];
 
@@ -57,12 +58,13 @@ export class MainGame extends Scene
         this.hurtSound.setVolume(3.5);
         this.explosionSound = this.sound.add('explosion');
         this.backwardsSound = this.sound.add('backwards');
+        this.bounceSound = this.sound.add('bounce');
+        this.bounceSound.setVolume(2);
         this.spaceInvadersSound = this.sound.add('space_invaders');
         this.initialSpaceInvadersRate = this.spaceInvadersSound.rate;
         this.spaceInvadersSound.setVolume(4);
         this.spaceInvadersSound.play();
         this.spaceInvadersSound.loop = true;
-
     }
 
     createInputs() {
@@ -112,7 +114,7 @@ export class MainGame extends Scene
 
         this.ball.sprite.setScale(1.2);
             
-        this.physics.add.collider(this.ball.sprite, this.platforms);
+        this.physics.add.collider(this.ball.sprite, this.platforms, this.playBounce as any, undefined, this);
         this.physics.add.collider(this.firstPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
         this.physics.add.collider(this.secondPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
     }
@@ -234,6 +236,11 @@ export class MainGame extends Scene
         const velocityY = Math.sin(angle) * speed;
 
         ball.setVelocity(velocityX, velocityY);
+        this.playBounce();
+    }
+
+    playBounce() {
+        this.bounceSound.play();
     }
 
     showExplosion() {

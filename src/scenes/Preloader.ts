@@ -68,6 +68,7 @@ export class Preloader extends Scene
         this.load.audio('backwards', ['backwards_trimmed.mp3']);
         this.load.audio('space_invaders', ['space_invaders_song.ogg']);
         this.load.audio('victory', ['link_victory.mp3']);
+        this.load.audio('bounce', ['grenade_trimmed.mp3']); // TODO: find better sound
     }
 
     create ()
