@@ -8,7 +8,6 @@ export const enum Assets {
     PINK_LASER = 'pink_laser',
     BLUE_LASER = 'blue_laser',
     HEART = 'heart',
-    GAME_OVER_BACKGROUND = 'game_over_background',
     CROWN = 'crown'
 };
 

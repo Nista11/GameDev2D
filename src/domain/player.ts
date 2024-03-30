@@ -4,7 +4,7 @@ import { MainGame } from "../scenes/MainGame";
 import { DynamicObject, DynamicObjectBuilder } from "./dynamicObject";
 
 export abstract class AbstractPlayer extends DynamicObject {
-    public lives = 5;
+    public lives = 1;
     public lastLaserPress = 0;
     public lastLaserEffect = 0;
     public lastJumpPress = 0;

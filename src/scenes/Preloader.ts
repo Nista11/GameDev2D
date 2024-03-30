@@ -43,8 +43,6 @@ export class Preloader extends Scene
 
         this.load.image(Assets.HEART, 'heart.png');
 
-        this.load.image(Assets.GAME_OVER_BACKGROUND, 'bg.png');
-
         this.load.image(Assets.CROWN, 'crown.png');
 
         this.load.spritesheet(Assets.BALL, 'bomb_sprite_combined.png', {
@@ -66,7 +64,7 @@ export class Preloader extends Scene
         this.load.audio('hurt', ['hurt_c_08.mp3']);
         this.load.audio('explosion', ['explosion.mp3']);
         this.load.audio('backwards', ['backwards_trimmed.mp3']);
-        this.load.audio('victory', ['link_victory.mp3']);
+        this.load.audio('victory', ['revolutionary_etude_ending.mp3']);
         this.load.audio('a6', ['a6.mp3']); 
         this.load.audio('b6', ['b6.mp3']); 
         this.load.audio('c6', ['c6.mp3']); 

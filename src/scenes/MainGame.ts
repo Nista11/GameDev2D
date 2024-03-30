@@ -75,7 +75,7 @@ export class MainGame extends Scene
 
     createPlatforms() {
         this.platforms = this.physics.add.staticGroup();
-        this.platforms.create(400, 568, GameObjectsEnum.GROUND).setScale(2).refreshBody();
+        this.platforms.create(400, 568, GameObjectsEnum.GROUND);
         this.platforms.create(400, 436, GameObjectsEnum.NET).setScale(.5).refreshBody();
     }
 
@@ -110,7 +110,7 @@ export class MainGame extends Scene
 
         this.ball.sprite.setScale(1.2);
             
-        this.physics.add.collider(this.ball.sprite, this.platforms, this.playBounce as any, undefined, this);
+        this.physics.add.collider(this.ball.sprite, this.platforms);
         this.physics.add.collider(this.firstPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
         this.physics.add.collider(this.secondPlayer.sprite, this.ball.sprite, this.hitBall as any, undefined, this);
     }

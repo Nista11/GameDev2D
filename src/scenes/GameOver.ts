@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { Assets, Dimensions } from "../shared/constants";
+import { PhaserSound } from "../shared/types";
 
 export class GameOver extends Scene {
     text: any;
@@ -8,7 +9,7 @@ export class GameOver extends Scene {
     background: Phaser.GameObjects.Image;
     playerSprite: Phaser.GameObjects.Sprite;
     crown: Phaser.GameObjects.Image;
-    victorySound: PhaserSound
+    victorySound: PhaserSound;
 
     constructor() {
         super('GameOver');
@@ -25,11 +26,10 @@ export class GameOver extends Scene {
     create() {
         this.victorySound = this.sound.add('victory');
         this.victorySound.play();
-        this.background = this.add.image(Dimensions.WIDTH / 2, Dimensions.HEIGHT / 2, Assets.GAME_OVER_BACKGROUND)
-            .setSize(Dimensions.WIDTH, Dimensions.HEIGHT);
-        this.playerSprite = this.add.sprite(Dimensions.WIDTH / 2, Dimensions.HEIGHT / 2, this.winner);
+        this.background = this.add.image(Dimensions.WIDTH / 2, Dimensions.HEIGHT / 2, Assets.SKY);
+        this.playerSprite = this.add.sprite(Dimensions.WIDTH / 2, 383, this.winner);
         this.playerSprite.anims.play(`${this.winner}_turn`, true);
-        this.crown = this.add.sprite(Dimensions.WIDTH / 2, Dimensions.HEIGHT / 2 - 16, Assets.CROWN).setScale(.055);
+        this.crown = this.add.sprite(Dimensions.WIDTH / 2, 383 - 16, Assets.CROWN).setScale(.055);
         this.text = this.add.text(325, 200, `${this.winner === Assets.PINK_PLAYER ? 'First' : 'Second'} player won!\nPress R to restart`);
         this.keyR = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     }
