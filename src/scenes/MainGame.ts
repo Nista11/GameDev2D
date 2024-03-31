@@ -153,7 +153,7 @@ export class MainGame extends Scene
     }
 
     createPlayerAnimations() {
-        [Assets.PINK_PLAYER, Assets.BLUE_PLAYER].map(asset => {
+        [Assets.PINK_PLAYER, Assets.BLUE_PLAYER].forEach(asset => {
             this.anims.create({
                 key: `${asset}_left`,
                 frames: this.anims.generateFrameNumbers(asset, { start: 0, end: 3 }),
